@@ -55,6 +55,9 @@ jobs:
       - run: docker build -t closure-risk .
       - name: Smoke test
         run: |
-          docker run -d -p 8000:8000 closure-risk
+          docker run -d -p 8000:8000 --name api closure-risk
           for i in $(seq 1 30); do curl -fs localhost:8000/health && break; sleep 1; done
           curl -fs localhost:8000/model | grep -q trained_through
+      - name: Container logs
+        if: failure()
+        run: docker logs api

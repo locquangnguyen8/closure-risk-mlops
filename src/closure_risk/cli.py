@@ -8,10 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .backtest import rolling_backtest
-from .features import build_features
-from .monitor import simulate_production
-from .simulate import simulate
+# Training modules are imported inside their commands: the serving image has no scikit-learn or MLflow.
 
 DATA = Path("data")
 REPORTS = Path("reports")
@@ -19,6 +16,7 @@ MODELS = Path("models")
 
 
 def load_features() -> pd.DataFrame:
+    """Load the feature table, generating the synthetic data first if needed."""
     path = DATA / "features.csv"
     if not path.exists():
         cmd_simulate(None)
@@ -26,6 +24,9 @@ def load_features() -> pd.DataFrame:
 
 
 def cmd_simulate(_args) -> int:
+    from .features import build_features
+    from .simulate import simulate
+
     DATA.mkdir(exist_ok=True)
     raw = simulate()
     raw.to_csv(DATA / "raw.csv", index=False)
@@ -88,6 +89,8 @@ def monitoring_report(run) -> str:
 
 
 def cmd_backtest(args) -> int:
+    from .backtest import rolling_backtest
+
     result = rolling_backtest(load_features())
     REPORTS.mkdir(exist_ok=True)
     (REPORTS / "backtest.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
@@ -102,6 +105,8 @@ def cmd_backtest(args) -> int:
 
 
 def cmd_monitor(args) -> int:
+    from .monitor import simulate_production
+
     on_model = None
     if args.mlflow:
         from . import tracking
