@@ -1,5 +1,7 @@
 # closure-risk-mlops
 
+[![ci](https://github.com/locquangnguyen8/closure-risk-mlops/actions/workflows/ci.yml/badge.svg)](https://github.com/locquangnguyen8/closure-risk-mlops/actions/workflows/ci.yml)
+
 Forecasts the risk that a shellfish harvest area will be **closed within the next 7 days**, with the parts a model needs to stay useful after it ships:
 
 - **A leak-free backtest** over 12 monthly folds, with a 7-day embargo between training and test data.
