@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "closure-risk-mlops"
+version = "0.1.0"
+description = "7-day harvest-closure risk forecasting with rolling backtests, drift monitoring, shadow-tested retraining, MLflow and a serving API."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+# Serving needs only these; training extras are below so the Docker image stays small.
+dependencies = ["numpy>=1.26", "pandas>=2.1", "xgboost>=2.0", "fastapi>=0.110", "uvicorn>=0.29", "pydantic>=2.6"]
+
+[project.optional-dependencies]
+train = ["scikit-learn>=1.4", "mlflow>=3.0"]
+dev = ["scikit-learn>=1.4", "mlflow>=3.0", "pytest>=8,<9", "httpx2", "ruff>=0.5"]
+
+[project.scripts]
+closure-risk = "closure_risk.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
